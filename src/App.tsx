@@ -115,14 +115,14 @@ export default function App() {
           </div>
         </section>
 
-        {/* Filter Chips - Horizontally Scrollable on Mobile */}
-        <section className="mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex overflow-x-auto pb-4 scrollbar-hide gap-2 no-scrollbar">
+        {/* Filter Chips - Wrapped for visibility */}
+        <section className="mb-8">
+          <div className="flex flex-wrap gap-2 justify-start">
             {FILTER_CHIPS.map((chip) => (
               <button
                 key={chip}
                 onClick={() => setActiveFilter(chip)}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
+                className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
                   activeFilter === chip 
                     ? 'bg-primary text-white shadow-lg shadow-primary/20' 
                     : 'bg-surface-container hover:bg-surface-container-low text-on-surface-variant border border-on-surface/5'
