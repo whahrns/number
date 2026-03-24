@@ -147,7 +147,7 @@ export default function App() {
                 transition={{ duration: 0.2, delay: index * 0.03 }}
                 className="group bg-surface-container-lowest hover:bg-surface-container-low transition-all p-5 md:p-6 rounded-2xl flex items-start gap-4 md:gap-6 cursor-pointer shadow-sm hover:shadow-md border border-on-surface/5"
               >
-                <div className="flex-grow space-y-1">
+                <div className="flex-grow space-y-1" key={`info-${staff.id}`}>
                   <div className="flex justify-between items-start">
                     <h3 className="text-lg md:text-xl font-bold text-on-surface leading-tight group-hover:text-primary transition-colors">
                       {staff.name}
@@ -165,13 +165,17 @@ export default function App() {
                       <MapPin className="w-3.5 h-3.5" />
                       {staff.office}
                     </span>
-                    <a 
-                      href={`tel:${staff.phone}`}
-                      className="flex items-center gap-1.5 text-[11px] md:text-xs text-secondary hover:text-primary transition-colors cursor-pointer"
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      {staff.phone}
-                    </a>
+                    {staff.phone !== 'N/A' && (
+                      <a 
+                        href={`tel:${staff.phone.replace(/[^0-9]/g, '')}`}
+                        key={`tel-${staff.id}`}
+                        className="flex items-center gap-1.5 text-[11px] md:text-xs text-secondary hover:text-primary transition-colors cursor-pointer relative z-10"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        {staff.phone}
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>
