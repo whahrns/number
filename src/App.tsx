@@ -115,24 +115,34 @@ export default function App() {
           </div>
         </section>
 
-        {/* Filter Chips - Balanced Grid */}
-        <section className="mb-8">
-          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-2">
-            {FILTER_CHIPS.map((chip) => (
-              <button
-                key={chip}
-                onClick={() => setActiveFilter(chip)}
-                className={`px-1 py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-medium transition-all text-center flex items-center justify-center min-h-[44px] leading-tight ${
-                  activeFilter === chip 
-                    ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                    : 'bg-surface-container hover:bg-surface-container-low text-on-surface-variant border border-on-surface/5'
-                }`}
-              >
-                {chip}
-              </button>
-            ))}
-          </div>
-        </section>
+        {/* Filter Chips - Balanced Grid (Hidden during active search) */}
+        <AnimatePresence>
+          {!searchQuery && (
+            <motion.section 
+              initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginBottom: '2rem' }}
+              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-2">
+                {FILTER_CHIPS.map((chip) => (
+                  <button
+                    key={chip}
+                    onClick={() => setActiveFilter(chip)}
+                    className={`px-1 py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-medium transition-all text-center flex items-center justify-center min-h-[44px] leading-tight ${
+                      activeFilter === chip 
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                        : 'bg-surface-container hover:bg-surface-container-low text-on-surface-variant border border-on-surface/5'
+                    }`}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            </motion.section>
+          )}
+        </AnimatePresence>
 
         {/* Staff Results Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
