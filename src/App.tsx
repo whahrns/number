@@ -44,6 +44,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('전체 교직원');
   const [visibleCount, setVisibleCount] = useState(10);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const filteredStaff = useMemo(() => {
     return RAW_STAFF_DATA.filter(staff => {
@@ -103,7 +104,11 @@ export default function App() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setActiveFilter('전체 교직원')}
+              onFocus={() => {
+                setActiveFilter('전체 교직원');
+                setIsSearchFocused(true);
+              }}
+              onBlur={() => setIsSearchFocused(false)}
               className="w-full bg-surface-container-low border-none rounded-2xl py-4 md:py-5 pl-14 md:pl-16 pr-20 md:pr-32 text-base md:text-lg focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50 shadow-sm"
               placeholder="이름, 부서, 내선번호로 검색..."
             />
@@ -115,9 +120,9 @@ export default function App() {
           </div>
         </section>
 
-        {/* Filter Chips - Balanced Grid (Hidden during active search) */}
+        {/* Filter Chips - Balanced Grid (Hidden during active search or focus) */}
         <AnimatePresence>
-          {!searchQuery && (
+          {!searchQuery && !isSearchFocused && (
             <motion.section 
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
               animate={{ opacity: 1, height: 'auto', marginBottom: '2rem' }}
