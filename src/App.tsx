@@ -115,14 +115,14 @@ export default function App() {
           </div>
         </section>
 
-        {/* Filter Chips - Wrapped for visibility */}
+        {/* Filter Chips - Balanced Grid */}
         <section className="mb-8">
-          <div className="flex flex-wrap gap-2 justify-start">
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-2">
             {FILTER_CHIPS.map((chip) => (
               <button
                 key={chip}
                 onClick={() => setActiveFilter(chip)}
-                className={`px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all whitespace-nowrap ${
+                className={`px-1 py-2.5 rounded-xl text-[10px] sm:text-xs md:text-sm font-medium transition-all text-center flex items-center justify-center min-h-[44px] leading-tight ${
                   activeFilter === chip 
                     ? 'bg-primary text-white shadow-lg shadow-primary/20' 
                     : 'bg-surface-container hover:bg-surface-container-low text-on-surface-variant border border-on-surface/5'
