@@ -71,9 +71,12 @@ export default function App() {
       <header className="sticky top-0 w-full bg-surface/80 backdrop-blur-xl z-50 border-b border-on-surface/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-primary p-2 rounded-lg">
-              <GraduationCap className="text-white w-6 h-6" />
-            </div>
+            <img 
+              src="https://lara-m.goesh.kr/dext5editordata/2025/12/20251205_161630157_70576.png" 
+              alt="배곧라라중 로고" 
+              className="w-10 h-10 object-contain"
+              referrerPolicy="no-referrer"
+            />
             <h1 className="text-primary font-bold tracking-tight text-base sm:text-xl">배곧라라중 디지털 비상연락망</h1>
           </div>
           
