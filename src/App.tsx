@@ -74,7 +74,7 @@ export default function App() {
             <div className="bg-primary p-2 rounded-lg">
               <GraduationCap className="text-white w-6 h-6" />
             </div>
-            <h1 className="text-primary font-bold tracking-tight text-xl hidden sm:block">배곧라라중학교 교직원 조회</h1>
+            <h1 className="text-primary font-bold tracking-tight text-base sm:text-xl">2026 배곧라라중 디지털 비상연락망</h1>
           </div>
           
           <div className="flex items-center gap-4">
@@ -86,6 +86,15 @@ export default function App() {
       </header>
 
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Mobile Title - Only visible on small screens */}
+        <div className="md:hidden mb-8">
+          <h2 className="text-2xl font-black text-primary tracking-tighter leading-none">
+            2026<br />
+            배곧라라중<br />
+            디지털 비상연락망
+          </h2>
+        </div>
+
         {/* Search Header Section */}
         <section className="mb-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
