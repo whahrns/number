@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   Bell, 
@@ -43,8 +43,47 @@ const STATUS_LABELS: Record<string, string> = {
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('');
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(0);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  
+  // Auto-reveal results for meaningful search queries
+  useEffect(() => {
+    const hangeulCount = (searchQuery.match(/[가-힣]/g) || []).length;
+    const digitCount = (searchQuery.match(/[0-9]/g) || []).length;
+    
+    if (hangeulCount >= 2 || digitCount >= 3) {
+      if (visibleCount === 0) setVisibleCount(10);
+    }
+  }, [searchQuery]);
+
+  // Security: 10-second idle timeout
+  useEffect(() => {
+    if (!searchQuery && !activeFilter) return;
+
+    let timeoutId: number;
+
+    const resetTimer = () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        setSearchQuery('');
+        setActiveFilter('');
+        setVisibleCount(0);
+        setIsSearchFocused(false);
+      }, 10000); // 10 seconds
+    };
+
+    // Initial timer start
+    resetTimer();
+
+    // Activity listeners
+    const events = ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'];
+    events.forEach(event => window.addEventListener(event, resetTimer));
+
+    return () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      events.forEach(event => window.removeEventListener(event, resetTimer));
+    };
+  }, [searchQuery, activeFilter]);
 
   const filteredStaff = useMemo(() => {
     if (!searchQuery && !activeFilter) return [];
@@ -114,6 +153,7 @@ export default function App() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => {
                 setActiveFilter('전체 교직원');
+                setVisibleCount(0);
                 setIsSearchFocused(true);
               }}
               onBlur={() => setIsSearchFocused(false)}
@@ -204,6 +244,8 @@ export default function App() {
                   </div>
                 </motion.div>
               ))
+            ) : filteredStaff.length > 0 && visibleCount === 0 ? (
+              null
             ) : (
               <div className="col-span-full py-20 flex flex-col items-center justify-center text-center space-y-4">
                 {!searchQuery && !activeFilter ? (
@@ -236,11 +278,11 @@ export default function App() {
         {visibleCount < filteredStaff.length && (
           <div className="mt-16 text-center">
             <button 
-              onClick={() => setVisibleCount(prev => prev + 10)}
+              onClick={() => setVisibleCount(prev => prev === 0 ? 10 : prev + 10)}
               className="bg-surface-container hover:bg-surface-container-low text-primary px-10 py-4 rounded-full font-bold transition-all active:scale-95 flex items-center gap-2 mx-auto shadow-sm"
             >
               <ChevronDown className="w-5 h-5" />
-              교직원 더 보기
+              {visibleCount === 0 ? '교직원 목록 보기' : '교직원 더 보기'}
             </button>
           </div>
         )}
