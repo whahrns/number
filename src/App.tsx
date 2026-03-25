@@ -48,6 +48,11 @@ export default function App() {
   
   // Auto-reveal results for meaningful search queries
   useEffect(() => {
+    if (!searchQuery) {
+      setVisibleCount(0);
+      return;
+    }
+
     const hangeulCount = (searchQuery.match(/[가-힣]/g) || []).length;
     const digitCount = (searchQuery.match(/[0-9]/g) || []).length;
     
