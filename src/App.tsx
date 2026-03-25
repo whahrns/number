@@ -59,6 +59,7 @@ export default function App() {
       
       const matchesFilter = 
         activeFilter === '전체 교직원' ||
+        activeFilter === '' ||
         staff.department === activeFilter;
 
       return matchesSearch && matchesFilter;
@@ -112,6 +113,7 @@ export default function App() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => {
+                setActiveFilter('전체 교직원');
                 setIsSearchFocused(true);
               }}
               onBlur={() => setIsSearchFocused(false)}
