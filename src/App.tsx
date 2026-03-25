@@ -42,11 +42,13 @@ const STATUS_LABELS: Record<string, string> = {
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('전체 교직원');
+  const [activeFilter, setActiveFilter] = useState('');
   const [visibleCount, setVisibleCount] = useState(10);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const filteredStaff = useMemo(() => {
+    if (!searchQuery && !activeFilter) return [];
+    
     return RAW_STAFF_DATA.filter(staff => {
       const matchesSearch = 
         staff.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -92,10 +94,12 @@ export default function App() {
         {/* Search Header Section */}
         <section className="mb-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-            <div className="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full text-secondary font-medium text-sm self-start md:self-auto">
-              <Filter className="w-4 h-4" />
-              <span>{filteredStaff.length}개의 결과 발견</span>
-            </div>
+            {(searchQuery || activeFilter) && (
+              <div className="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full text-secondary font-medium text-sm self-start md:self-auto">
+                <Filter className="w-4 h-4" />
+                <span>{filteredStaff.length}개의 결과 발견</span>
+              </div>
+            )}
           </div>
 
           {/* Search Bar */}
@@ -108,7 +112,6 @@ export default function App() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => {
-                setActiveFilter('전체 교직원');
                 setIsSearchFocused(true);
               }}
               onBlur={() => setIsSearchFocused(false)}
@@ -155,49 +158,75 @@ export default function App() {
         {/* Staff Results Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <AnimatePresence mode="popLayout">
-            {displayedStaff.map((staff, index) => (
-              <motion.div
-                key={staff.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, delay: index * 0.03 }}
-                className="group bg-surface-container-lowest hover:bg-surface-container-low transition-all p-5 md:p-6 rounded-2xl flex items-start gap-4 md:gap-6 cursor-pointer shadow-sm hover:shadow-md border border-on-surface/5"
-              >
-                <div className="flex-grow space-y-1" key={`info-${staff.id}`}>
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-lg md:text-xl font-bold text-on-surface leading-tight group-hover:text-primary transition-colors">
-                      {staff.name}
-                    </h3>
+            {displayedStaff.length > 0 ? (
+              displayedStaff.map((staff, index) => (
+                <motion.div
+                  key={staff.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2, delay: index * 0.03 }}
+                  className="group bg-surface-container-lowest hover:bg-surface-container-low transition-all p-5 md:p-6 rounded-2xl flex items-start gap-4 md:gap-6 cursor-pointer shadow-sm hover:shadow-md border border-on-surface/5"
+                >
+                  <div className="flex-grow space-y-1" key={`info-${staff.id}`}>
+                    <div className="flex justify-between items-start">
+                      <h3 className="text-lg md:text-xl font-bold text-on-surface leading-tight group-hover:text-primary transition-colors">
+                        {staff.name}
+                      </h3>
+                    </div>
+                    <p className="text-primary font-semibold text-xs md:text-sm">
+                      {staff.department} {staff.class && `(${staff.class})`}
+                    </p>
+                    <p className="text-on-surface-variant text-xs md:text-sm line-clamp-1">
+                      {staff.subject} • 내선: {staff.extension}
+                    </p>
+                    
+                    <div className="pt-3 md:pt-4 flex flex-wrap items-center gap-x-4 md:gap-x-6 gap-y-2">
+                      <span className="flex items-center gap-1.5 text-[11px] md:text-xs text-secondary">
+                        <MapPin className="w-3.5 h-3.5" />
+                        {staff.office}
+                      </span>
+                      {staff.phone !== 'N/A' && (
+                        <a 
+                          href={`tel:${staff.phone.replace(/[^0-9]/g, '')}`}
+                          key={`tel-${staff.id}`}
+                          className="flex items-center gap-1.5 text-[11px] md:text-xs text-secondary hover:text-primary transition-colors cursor-pointer relative z-10"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Phone className="w-3.5 h-3.5" />
+                          {staff.phone}
+                        </a>
+                      )}
+                    </div>
                   </div>
-                  <p className="text-primary font-semibold text-xs md:text-sm">
-                    {staff.department} {staff.class && `(${staff.class})`}
-                  </p>
-                  <p className="text-on-surface-variant text-xs md:text-sm line-clamp-1">
-                    {staff.subject} • 내선: {staff.extension}
-                  </p>
-                  
-                  <div className="pt-3 md:pt-4 flex flex-wrap items-center gap-x-4 md:gap-x-6 gap-y-2">
-                    <span className="flex items-center gap-1.5 text-[11px] md:text-xs text-secondary">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {staff.office}
-                    </span>
-                    {staff.phone !== 'N/A' && (
-                      <a 
-                        href={`tel:${staff.phone.replace(/[^0-9]/g, '')}`}
-                        key={`tel-${staff.id}`}
-                        className="flex items-center gap-1.5 text-[11px] md:text-xs text-secondary hover:text-primary transition-colors cursor-pointer relative z-10"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Phone className="w-3.5 h-3.5" />
-                        {staff.phone}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-full py-20 flex flex-col items-center justify-center text-center space-y-4">
+                {!searchQuery && !activeFilter ? (
+                  <>
+                    <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center text-secondary/30">
+                      <Search className="w-10 h-10" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-on-surface font-semibold">교직원을 검색해보세요</p>
+                      <p className="text-on-surface-variant text-sm">이름, 부서 또는 내선번호를 입력하거나<br />부서 버튼을 선택하여 연락처를 확인하실 수 있습니다.</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center text-secondary/30">
+                      <Filter className="w-10 h-10" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-on-surface font-semibold">검색 결과가 없습니다</p>
+                      <p className="text-on-surface-variant text-sm">검색어를 확인하거나 다른 부서를 선택해보세요.</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </AnimatePresence>
         </section>
 
