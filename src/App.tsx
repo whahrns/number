@@ -46,20 +46,21 @@ export default function App() {
   const [visibleCount, setVisibleCount] = useState(0);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   
-  // Auto-reveal results for meaningful search queries
+  // Auto-reveal results for meaningful search queries or specific department filters
   useEffect(() => {
-    if (!searchQuery) {
-      setVisibleCount(0);
-      return;
-    }
-
     const hangeulCount = (searchQuery.match(/[가-힣]/g) || []).length;
     const digitCount = (searchQuery.match(/[0-9]/g) || []).length;
     
-    if (hangeulCount >= 2 || digitCount >= 3) {
+    const isMeaningfulSearch = hangeulCount >= 2 || digitCount >= 3;
+    const isSpecificDepartment = activeFilter && activeFilter !== '전체 교직원' && activeFilter !== '';
+
+    if (isMeaningfulSearch || isSpecificDepartment) {
       if (visibleCount === 0) setVisibleCount(10);
+    } else {
+      // Hide if search is empty/short AND (no filter or "All Staff")
+      setVisibleCount(0);
     }
-  }, [searchQuery]);
+  }, [searchQuery, activeFilter]);
 
   // Security: 10-second idle timeout
   useEffect(() => {
