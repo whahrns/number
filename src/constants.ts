@@ -60,7 +60,7 @@ export const RAW_STAFF_DATA: StaffMember[] = [
   { id: 57, name: "허원석", subject: "주무관", office: "행정실", department: "행정실", extension: "0039", phone: "010-4832-4277", status: 'ACTIVE', isVerified: false },
   { id: 58, name: "이영재", subject: "행정계장", office: "행정실", department: "행정실", extension: "0063", phone: "010-8865-0512", status: 'ACTIVE', isVerified: true },
   { id: 59, name: "허은희", subject: "실무사", office: "행정실", department: "행정실", extension: "0046", phone: "010-3174-4114", status: 'ACTIVE', isVerified: false },
-  { id: 60, name: "송중현", subject: "인쇄실", office: "인쇄실", department: "인쇄실", extension: "0087", phone: "010-3914-3258", status: 'ACTIVE', isVerified: false },
+  { id: 60, name: "송중현", subject: "인쇄실", office: "인쇄실", department: "행정실", extension: "0087", phone: "010-3914-3258", status: 'ACTIVE', isVerified: false },
   { id: 61, name: "김미경", subject: "실무사", office: "1층", department: "교무기획부", extension: "0098", phone: "010-2889-9170", status: 'ACTIVE', isVerified: false },
   { id: 62, name: "구은선", subject: "실무사", office: "1층", department: "교무기획부", extension: "0118", phone: "010-5542-8711", status: 'ACTIVE', isVerified: false },
 ];

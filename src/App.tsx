@@ -28,7 +28,8 @@ const FILTER_CHIPS = [
   "진로상담부",
   "1학년부",
   "2학년부",
-  "3학년부"
+  "3학년부",
+  "행정실"
 ];
 
 const STATUS_LABELS: Record<string, string> = {
